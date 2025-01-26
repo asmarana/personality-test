@@ -3,8 +3,54 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Theme Colors */
+  --lightning-blue: #00d4ff;
+  --deep-night: #0a0f1d;
+  --cosmic-dark: #141829;
+  --ice-highlight: #4cc9ff;
+  --frost-accent: #7be3ff;
+
+  /* Gradients */
+  --frost-gradient: linear-gradient(
+    to right,
+    var(--lightning-blue),
+    var(--ice-highlight)
+  );
+  --dark-gradient: linear-gradient(
+    to bottom,
+    var(--deep-night),
+    var(--cosmic-dark)
+  );
+
+  /* UI Elements */
+  --card-bg: rgba(20, 24, 41, 0.7);
+  --card-border: rgba(76, 201, 255, 0.1);
+  --hover-glow: 0 0 30px rgba(0, 212, 255, 0.2);
+}
+
+@layer base {
+  body {
+    @apply bg-gradient-to-b from-[var(--deep-night)] to-[var(--cosmic-dark)];
+    min-height: 100vh;
+    color: white;
+  }
+}
+
+@layer components {
+  .frost-card {
+    @apply backdrop-blur-lg bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl;
+  }
+
+  .frost-button {
+    @apply px-6 py-3 bg-gradient-to-r from-[var(--lightning-blue)] to-[var(--ice-highlight)] 
+    text-[var(--deep-night)] font-semibold rounded-lg 
+    hover:shadow-[var(--hover-glow)] transition-shadow;
+  }
+
+  .frost-text {
+    @apply bg-gradient-to-r from-[var(--lightning-blue)] to-[var(--ice-highlight)] 
+    bg-clip-text text-transparent;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,4 +64,36 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.stripe-pattern {
+  background-image: linear-gradient(
+      45deg,
+      theme('colors.secondary-night') 1.5px,
+      transparent 1.5px
+    ),
+    linear-gradient(
+      -45deg,
+      theme('colors.secondary-night') 1.5px,
+      transparent 1.5px
+    );
+  background-size: 60px 60px;
+  background-position: center;
+  transform: perspective(500px) rotateX(35deg);
+  opacity: 0.4;
+}
+
+/* Add this new utility class for consistent page backgrounds */
+.cosmic-background {
+  @apply relative min-h-screen overflow-hidden bg-gradient-to-b from-secondary-night;
+}
+
+.cosmic-background::before {
+  content: '';
+  @apply absolute inset-0 stripe-pattern;
+}
+
+.cosmic-background::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-b from-transparent via-secondary-night/50;
 }
