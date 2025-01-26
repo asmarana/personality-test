@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import NoAnswerComponent from '@/components/NoAnswerComponent';
 
 function FinishPageContent() {
   const router = useRouter();
@@ -10,6 +11,10 @@ function FinishPageContent() {
   const answersParam = searchParams.get('answers') || '';
 
   const answers = (answersParam && answersParam?.split(',').map(Number)) || [];
+
+  if (answers.length === 0) {
+    return <NoAnswerComponent />;
+  }
 
   const totalScore = answers.reduce((acc, curr) => acc + curr, 0);
   const maxScore = answers.length * 2;
@@ -22,18 +27,29 @@ function FinishPageContent() {
 
   const shareResult = () => {
     const text = `I just discovered I'm a ${
-      personalityType === 'Extrovert' ? 'Solar Extrovert' : 'Lunar Introvert'
-    } in the cosmic personality test! 🌟`;
+      personalityType === 'Extrovert' ? 'Extrovert' : 'Introvert'
+    } in the personality test! 🌟`;
 
     if (navigator.share) {
       navigator.share({
-        title: 'My Cosmic Personality',
+        title: 'My Personality',
         text: text,
         url: window.location.href,
+      }).catch((error) => {
+        if (error.name === 'AbortError') {
+          return;
+        }
+        console.error('Error sharing:', error);
       });
     } else {
-      navigator.clipboard.writeText(text);
-      alert('Result copied to clipboard!');
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert('Result copied to clipboard!');
+        })
+        .catch((error) => {
+          console.error('Failed to copy:', error);
+          alert('Failed to copy result to clipboard');
+        });
     }
   };
 
@@ -93,7 +109,6 @@ function FinishPageContent() {
     </div>
   );
 }
-
 export default function FinishPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
