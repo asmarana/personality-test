@@ -39,6 +39,19 @@ interface PageProps {
   searchParams: Promise<{ answers: string }>;
 }
 
+interface ConfettiProps {
+  showConfetti: boolean
+}
+
+interface WindowSize  {
+  width: number;
+  height: number;
+};
+
+interface QuestionsValidationProps {
+  questionIndex: number;
+  allQuestions: Question[];
+}
 
 export type {
   IFeature,
@@ -48,4 +61,7 @@ export type {
   QuestionOption,
   QuestionsProps,
   PageProps,
+  ConfettiProps,
+  WindowSize,
+  QuestionsValidationProps,
 };
